@@ -1,0 +1,39 @@
+{
+  "name": "gamessocial",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon -r dotenv/config src/server.js",
+    "debug": "nodemon -r dotenv/config --inspect=0.0.0.0:9229 src/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VerseVent/gamesSocial.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/VerseVent/gamesSocial/issues"
+  },
+  "homepage": "https://github.com/VerseVent/gamesSocial#readme",
+  "dependencies": {
+    "@sendgrid/mail": "7.7.0",
+    "body-parser": "1.20.0",
+    "cloudinary": "1.30.0",
+    "cors": "2.8.5",
+    "dotenv": "16.0.1",
+    "express": "4.18.1",
+    "jsonwebtoken": "8.5.1",
+    "mongodb": "4.8.0",
+    "mongoose": "6.4.5",
+    "mongosh": "1.5.1",
+    "multer": "1.4.5-lts.1",
+    "multer-storage-cloudinary": "4.0.0",
+    "nodemon": "2.0.19",
+    "password-validator": "5.3.0",
+    "uuidv4": "6.2.13",
+    "ws": "8.8.1"
+  }
+}
