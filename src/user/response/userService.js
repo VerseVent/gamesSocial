@@ -8,13 +8,7 @@ const sgMail = require("@sendgrid/mail");
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 function userService(userRepository) {
-  async function createUser({
-    username,
-    email,
-    password,
-    avatarUrl,
-    favoriteGamesList,
-  }) {
+  async function createUser({ username, email, password, avatarUrl }) {
     const validationResult = validateUser({ username, password });
     const errors = [
       ...validationResult.resultPassword,
@@ -34,22 +28,15 @@ function userService(userRepository) {
       email,
       password,
       avatarUrl: cloudinaryAvatarUrl,
-      approve: { isEmailApproved: false },
-      dodgeList: [],
-      friendsList: [],
-      favoriteGamesList,
+      isEmailApproved: false,
     };
     await userRepository.createUser(user);
 
     const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
     const url = `${process.env.APP_HOST}/user/verify/${accessToken}`;
-    // console.log(user.avatarUrl);
-    // console.log(accessToken);
-    console.log(email);
-    console.log(sgMail);
     const msg = {
       to: email,
-      from: "mykhailo.pronka@student.wab.edu.pl",
+      from: "buriakovskyi22@gmail.com",
       subject: `Verification mail for ${username}`,
       text: "and easy to do anywhere, even with Node.js",
       html: `<div>
@@ -77,11 +64,9 @@ function userService(userRepository) {
   async function checkUser({ userData }) {
     const { email, password } = userData;
     const user = await userRepository.checkForUser({ email });
-
     if (!user) throwError("There is no user with such email", 401);
     if (user.password !== password) throwError("Wrong password", 401);
-    if (!user.approve.isEmailApproved)
-      throwError("Please verify your email", 401);
+    if (!user.isEmailApproved) throwError("Please verify your email", 401);
     const jwtToken = jwt.sign(user.toJSON(), process.env.ACCESS_TOKEN_SECRET);
     const resData = {
       user: user,
@@ -89,10 +74,15 @@ function userService(userRepository) {
     };
     return resData;
   }
+  async function getUserById(userId) {
+    const user = await userRepository.getUserById(userId);
+    return user;
+  }
   return {
     createUser,
     verifyEmail,
     checkUser,
+    getUserById,
   };
 }
 module.exports = userService;

@@ -39,6 +39,15 @@ function userController(userService, userRepository) {
       next(e);
     }
   }
+  async function getUserById(req, res, next) {
+    try {
+      const { id } = req.params;
+      const resData = await userService.getUserById(id);
+      res.json(resData);
+    } catch (e) {
+      next(e);
+    }
+  }
   async function authUser(req, res, next) {
     try {
       res.json(req.user);
@@ -52,6 +61,7 @@ function userController(userService, userRepository) {
     verifyEmail,
     loginUser,
     authUser,
+    getUserById,
   };
 }
 module.exports = userController;

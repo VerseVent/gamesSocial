@@ -1,18 +1,39 @@
-const mongoose = require("mongoose");
+const Sequelize = require("sequelize");
+const User = require("./User");
+const { DB } = require("../connection");
+const Game = require("./Game");
 
-const { Schema } = mongoose;
-
-const RoomSchema = new Schema({
-  roomTitle: String,
-  maxPlayers: Number,
-  isRoomLocked: Boolean,
-  roomPassword: String,
-  createdBy: { type: Schema.Types.ObjectId, ref: "User" },
-  currentPlayers: [{ type: Schema.Types.ObjectId, ref: "User" }],
+const Room = DB.define("rooms", {
+  id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    allowNull: false,
+    primaryKey: true,
+  },
+  roomTitle: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  maxPlayers: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+  },
+  isRoomLocked: {
+    type: Sequelize.BOOLEAN,
+    allowNull: false,
+  },
+  roomPassword: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  gameId: {
+    type: Sequelize.INTEGER,
+    references: {
+      model: Game,
+      key: "id",
+    },
+  },
 });
-
-const Room = mongoose.model("Room", RoomSchema);
-
-module.exports = {
-  Room,
-};
+Room.belongsTo(Game);
+Game.hasMany(Room);
+module.exports = Room;

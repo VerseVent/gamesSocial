@@ -1,48 +1,41 @@
-function gameRepository(Game, User, Room) {
+function gameRepository(Game, User, Room, RoomAdmin) {
   async function createRoom(roomData, createdBy) {
     const { roomTitle, maxPlayers, isRoomLocked, roomPassword, gameTitle } =
       roomData;
     const currentGame = await Game.findOne({ title: gameTitle });
     if (!currentGame) {
-      throw new Error("there is no such a game in database");
+      throw new Error("there is no such game in database");
     }
     const user = await User.findOne({ email: createdBy });
-    await currentGame.rooms.push({
+    if (user.roomId) {
+      throw new Error("Please exit from actual room");
+    }
+    const room = await Room.create({
       roomTitle,
       maxPlayers,
       isRoomLocked,
       roomPassword,
-      createdBy: user._id,
-      currentPlayers: [user._id],
+      gameId: currentGame.id,
     });
-    await Game.findOne({ title: gameTitle }).updateOne({
-      $push: {
-        rooms: {
-          roomTitle,
-          maxPlayers,
-          isLocked,
-          password,
-          createdBy: user._id,
-          currentPlayers: [user._id],
+    const resUpdate = await User.update(
+      { roomId: room.id },
+      {
+        where: {
+          email: createdBy,
         },
-      },
-    });
-    const roomObj = await Game.findOne(
-      { title: gameTitle },
-      { rooms: { $slice: -1 } }
+      }
     );
 
-    console.log(await roomObj.populate("rooms.0.createdBy"));
+    RoomAdmin.create({ createdBy: user.id, roomId: room.id });
 
-    return roomObj;
-    // return "wait a bit";
+    return room;
   }
   async function getGamesInfo() {
-    const games = await Game.find({});
+    const games = await Game.findAll({});
     return games;
   }
   async function getGameById(gameId) {
-    const game = await Game.findOne({ _id: gameId });
+    const game = await Game.findOne({ where: { id: gameId } });
     return game;
   }
   return {

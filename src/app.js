@@ -2,9 +2,11 @@ const express = require("express");
 const cors = require("cors");
 const error = require("./error");
 const bodyParser = require("body-parser");
+const Room = require("./models/Room");
 
 module.exports = function app() {
-  const { User } = require("./models/user");
+  const User = require("./models/User");
+  const RoomAdmin = require("./models/RoomAdmin");
   const userRepository = require("./user/repository/userRepository")(User);
   const userService = require("./user/response/userService")(userRepository);
   const userController = require("./user/response/userController")(
@@ -16,8 +18,13 @@ module.exports = function app() {
     userRepository
   );
 
-  const { Game } = require("./models/game");
-  const gameRepository = require("./game/db/gameRepository")(Game, User);
+  const Game = require("./models/Game");
+  const gameRepository = require("./game/db/gameRepository")(
+    Game,
+    User,
+    Room,
+    RoomAdmin
+  );
   const gameService = require("./game/response/gameService")(gameRepository);
   const gameController = require("./game/response/gameController")(
     gameService,

@@ -3,11 +3,9 @@ function gameController(gameService) {
     try {
       const roomData = req.body;
       const createdBy = req.user.email;
-      console.log("Controller body data", roomData);
       const roomObj = await gameService.createRoom(roomData, createdBy);
-      console.log("Controller roomData: ", roomObj);
-      const currentRoom = roomObj._doc.rooms[0];
-      res.json(currentRoom);
+      // const currentRoom = roomObj._doc.rooms[0];
+      res.json(roomObj);
     } catch (e) {
       next(e);
     }
@@ -16,7 +14,6 @@ function gameController(gameService) {
     try {
       const userId = req.params.userId;
       const resData = await gameService.deleteRoomUser(userId);
-      console.log("deleteRoomUser: ResData", resData);
       res.json(resData);
     } catch (e) {
       next(e);
@@ -34,7 +31,7 @@ function gameController(gameService) {
     try {
       const gameId = req.params.gameId;
       const game = await gameService.getGameById(gameId);
-      console.log(game);
+      console.log("Game: ", game);
       res.json(game);
     } catch (e) {
       next(e);

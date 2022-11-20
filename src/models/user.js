@@ -1,23 +1,45 @@
-const mongoose = require("mongoose");
+const Sequelize = require("sequelize");
+const { DB } = require("../connection");
+const Room = require("./Room");
 
-const ApproveSchema = mongoose.Schema({
-  isEmailApproved: Boolean,
+const User = DB.define("users", {
+  id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    allowNull: false,
+    primaryKey: true,
+  },
+  username: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  email: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    unique: true,
+  },
+  password: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  avatarUrl: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  isEmailApproved: {
+    type: Sequelize.BOOLEAN,
+    allowNull: false,
+  },
+  roomId: {
+    type: Sequelize.INTEGER,
+    allowNull: true,
+    references: {
+      model: Room,
+      key: "id",
+    },
+  },
 });
+User.belongsTo(Room);
+Room.hasMany(User);
 
-const UserSchema = new mongoose.Schema({
-  username: String,
-  email: String,
-  password: String,
-  avatarUrl: String,
-  approve: ApproveSchema,
-  currentRoom: Object,
-  dodgeList: [],
-  friendsList: [],
-  favoriteGamesList: [String],
-});
-
-const User = mongoose.model("User", UserSchema);
-// User.updateOne();
-module.exports = {
-  User,
-};
+module.exports = User;

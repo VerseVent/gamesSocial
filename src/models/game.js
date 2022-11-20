@@ -1,15 +1,41 @@
-const mongoose = require("mongoose");
+const Sequelize = require("sequelize");
+const { DB } = require("../connection");
 
-const { Schema } = mongoose;
-
-const GameSchema = new Schema({
-  title: String,
-  imgUrl: String,
-  players: Number,
-  rooms: [{ type: Schema.Types.ObjectId, ref: "Room" }],
+const Game = DB.define("games", {
+  id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    allowNull: false,
+    primaryKey: true,
+  },
+  title: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  imgUrl: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  players: {
+    type: Sequelize.INTEGER,
+    allowNull: true,
+  },
 });
 
-const Game = mongoose.model("Game", GameSchema);
+module.exports = Game;
+
+// const mongoose = require("mongoose");
+
+// const { Schema } = mongoose;
+
+// const GameSchema = new Schema({
+//   title: String,
+//   imgUrl: String,
+//   players: Number,
+//   rooms: [{ type: Schema.Types.ObjectId, ref: "Room" }],
+// });
+
+// const Game = mongoose.model("Game", GameSchema);
 // async function createStartGames() {
 //   await Game.create({
 //     title: "dota2",
@@ -41,9 +67,7 @@ const Game = mongoose.model("Game", GameSchema);
 //   });
 // }
 // createStartGames();
-module.exports = {
-  Game,
-};
+// module.exports = Game;
 
 // async function createGameWithUsers() {
 //   const newUser1 = TestUsers.create({ username: "usernameTest" });

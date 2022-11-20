@@ -4,11 +4,12 @@ function gameService(gameRepository) {
   }
   async function getGamesInfo() {
     const games = await gameRepository.getGamesInfo();
-    return games.map((game) => {
-      game._doc.roomsLength = game.rooms.length;
-      const { rooms, ...newGameObj } = game._doc;
-      return newGameObj;
-    });
+    // return games.map((game) => {
+    // game._doc.roomsLength = game.rooms.length;
+    // const { rooms, ...newGameObj } = game._doc;
+    // return newGameObj;
+    return games;
+    // });
   }
   async function getGameById(gameId) {
     const game = await gameRepository.getGameById(gameId);
