@@ -43,11 +43,13 @@ function userService(userRepository) {
 
     const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
     const url = `${process.env.APP_HOST}/user/verify/${accessToken}`;
-    console.log(user.avatarUrl);
-    console.log(accessToken);
+    // console.log(user.avatarUrl);
+    // console.log(accessToken);
+    console.log(email);
+    console.log(sgMail);
     const msg = {
       to: email,
-      from: "mike.82pronka.27a@gmail.com",
+      from: "mykhailo.pronka@student.wab.edu.pl",
       subject: `Verification mail for ${username}`,
       text: "and easy to do anywhere, even with Node.js",
       html: `<div>
@@ -56,7 +58,11 @@ function userService(userRepository) {
       </div>
       `,
     };
-    sgMail.send(msg);
+    try {
+      await sgMail.send(msg);
+    } catch (e) {
+      console.log("Sendgrid error: ", e.response.body.errors);
+    }
   }
   async function verifyEmail({ accessToken }) {
     jwt.verify(

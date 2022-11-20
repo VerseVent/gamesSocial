@@ -10,6 +10,7 @@ const UserSchema = new mongoose.Schema({
   password: String,
   avatarUrl: String,
   approve: ApproveSchema,
+  currentRoom: Object,
   dodgeList: [],
   friendsList: [],
   favoriteGamesList: [String],

@@ -6,16 +6,7 @@ const GameSchema = new Schema({
   title: String,
   imgUrl: String,
   players: Number,
-  rooms: [
-    {
-      roomTitle: String,
-      maxPlayers: Number,
-      isLocked: Boolean,
-      password: String,
-      createdBy: { type: Schema.Types.ObjectId, ref: "User" },
-      currentPlayers: [{ type: Schema.Types.ObjectId, ref: "User" }],
-    },
-  ],
+  rooms: [{ type: Schema.Types.ObjectId, ref: "Room" }],
 });
 
 const Game = mongoose.model("Game", GameSchema);

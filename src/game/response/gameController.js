@@ -12,6 +12,16 @@ function gameController(gameService) {
       next(e);
     }
   }
+  async function deleteRoomUser(req, res, next) {
+    try {
+      const userId = req.params.userId;
+      const resData = await gameService.deleteRoomUser(userId);
+      console.log("deleteRoomUser: ResData", resData);
+      res.json(resData);
+    } catch (e) {
+      next(e);
+    }
+  }
   async function getGamesInfo(req, res, next) {
     try {
       const gamesInfo = await gameService.getGamesInfo();
@@ -21,15 +31,20 @@ function gameController(gameService) {
     }
   }
   async function getGameById(req, res, next) {
-    const gameId = req.params.gameId;
-    const game = await gameService.getGameById(gameId);
-    console.log(game);
-    res.json(game);
+    try {
+      const gameId = req.params.gameId;
+      const game = await gameService.getGameById(gameId);
+      console.log(game);
+      res.json(game);
+    } catch (e) {
+      next(e);
+    }
   }
   return {
     createRoom,
     getGamesInfo,
     getGameById,
+    deleteRoomUser,
   };
 }
 module.exports = gameController;
