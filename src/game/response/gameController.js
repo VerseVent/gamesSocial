@@ -37,11 +37,22 @@ function gameController(gameService) {
       next(e);
     }
   }
+  async function deleteRoomCreatorAndRoom(req, res, next) {
+    try {
+      const data = req.params;
+      const user = await gameService.deleteRoomCreatorAndRoom(data);
+
+      res.json(user);
+    } catch (e) {
+      next(e);
+    }
+  }
   return {
     createRoom,
     getGamesInfo,
     getGameById,
     deleteRoomUser,
+    deleteRoomCreatorAndRoom,
   };
 }
 module.exports = gameController;

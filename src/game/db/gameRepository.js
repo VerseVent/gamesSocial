@@ -38,10 +38,40 @@ function gameRepository(Game, User, Room, RoomAdmin) {
     const game = await Game.findOne({ where: { id: gameId } });
     return game;
   }
+  async function deleteRoomCreatorAndRoom({ userId, gameId, roomId }) {
+    console.log("Repo: ", userId, gameId, roomId);
+    try {
+      await User.update(
+        { roomId: null },
+        {
+          where: {
+            id: userId,
+          },
+        }
+      );
+      await RoomAdmin.destroy({
+        where: {
+          roomId: roomId,
+          createdBy: userId,
+        },
+      });
+      await Room.destroy({
+        where: {
+          id: roomId,
+          gameId: gameId,
+        },
+      });
+      const user = await User.findOne({ where: { id: userId } });
+      return user;
+    } catch (e) {
+      throw e;
+    }
+  }
   return {
     createRoom,
     getGamesInfo,
     getGameById,
+    deleteRoomCreatorAndRoom,
   };
 }
 module.exports = gameRepository;

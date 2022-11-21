@@ -15,12 +15,22 @@ function gameService(gameRepository) {
     const game = await gameRepository.getGameById(gameId);
     return game;
   }
+  async function deleteRoomCreatorAndRoom(data) {
+    try {
+      const user = await gameRepository.deleteRoomCreatorAndRoom(data);
+
+      return user;
+    } catch (e) {
+      throw e;
+    }
+  }
   async function deleteRoomUser(userId) {}
   return {
     createRoom,
     getGamesInfo,
     getGameById,
     deleteRoomUser,
+    deleteRoomCreatorAndRoom,
   };
 }
 module.exports = gameService;
